@@ -13,8 +13,8 @@
   <div class="container">
 
     <div class="jumbotron text-center">
-      <h1>Hot Finds On Craigslist</h1>
-      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Find An Awesome Deal!</a></p>
+      <h1>Facts of Mars</h1>
+      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Find An Awesome facts!</a></p>
     </div>
 
     <!-- Craigslist Listings -->
@@ -24,6 +24,11 @@
         <img src='{{mars_info.img_url}}'/>
         <h4>{{mars_info.weather}}</h4>
         {{mars_info.facts|safe}}
+
+        <img src='{{mars_info.hemisphere[0]}}'/>
+        <img src='{{mars_info.hemisphere[1]}}'/>
+        <img src='{{mars_info.hemisphere[2]}}'/>
+        <img src='{{mars_info.hemisphere[3]}}'/>
       </div>
     </div>
 
