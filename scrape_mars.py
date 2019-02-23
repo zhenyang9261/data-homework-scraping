@@ -17,26 +17,26 @@ def scrape():
     # URL of page to be scraped
     url = 'https://mars.nasa.gov/news/'
 
+    # Retrieve page. Create BeautifulSoup object; parse with 'html.parser'
     browser.visit(url)
     html = browser.html
     soup = BeautifulSoup(html, 'html.parser')
 
+    # Find and compose result
     first_news = soup.find('div', class_="list_text")
 
     news_title = first_news.a.text.strip()
     news_paragraph = first_news.find('div', class_="article_teaser_body").text.strip()
-    
     latest_news =[news_title, news_paragraph]
 
     #---------- JPL Mars Space Images -------------------#
 
     # URL of page to be scraped
     url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
-    # Retrieve page
+    
+    # Retrieve page. Create BeautifulSoup object; parse with 'html.parser'
     browser.visit(url)
     html = browser.html
-
-    # Create BeautifulSoup object; parse with 'html.parser'
     soup = BeautifulSoup(html, 'html.parser')
 
     # Find and compose the url
@@ -47,13 +47,13 @@ def scrape():
 
     # URL of page to be scraped
     url = 'https://twitter.com/marswxreport?lang=en'
-    # Retrieve page
+    
+    # Retrieve page. Create BeautifulSoup object; parse with 'html.parser'
     browser.visit(url)
     html = browser.html
-
-    # Create BeautifulSoup object; parse with 'html.parser'
     soup = BeautifulSoup(html, 'html.parser')
 
+    # Find the tweets
     tweets = soup.find_all('div', class_="tweet")
 
     # Loop through tweets search for result
@@ -84,101 +84,46 @@ def scrape():
 
     # General HTML table 
     html_table = facts_df.to_html()
-
+    
     #---------- Mars Hemispheres -------------------#
+    
     # URL of page to be scraped
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-	
-	# Picture - Cerberus Hemisphere Enhanced -------------
+    
+    # Links to be clicked
+    hemi_text = ['Cerberus Hemisphere Enhanced', 'Schiaparelli Hemisphere Enhanced',\
+            'Syrtis Major Hemisphere Enhanced', 'Valles Marineris Hemisphere Enhanced']
+    
+    # Result list
+    hemisphere_img = []
 
-    # Retrieve page
-    browser.visit(url)
-    html = browser.html
+    for x in range(4):
 
-    # Wait a couple seconds in case result is not coming back fast enough
+        # Retrieve page. Create BeautifulSoup object; parse with 'html.parser'
+        browser.visit(url)
+        html = browser.html
+        soup = BeautifulSoup(html, 'html.parser')
 
-    # Create BeautifulSoup object; parse with 'html.parser'
-    soup = BeautifulSoup(html, 'html.parser')
+        # Click on the link and go to the next page to get the image link
+        browser.click_link_by_partial_text(hemi_text[x])
 
-    # Click on the link and go to the next page to get the image link
-    browser.click_link_by_partial_text('Cerberus Hemisphere Enhanced')
+        # # Retrieve page. Create BeautifulSoup object; parse with 'html.parser'
+        html=browser.html
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        # Find the image link
+        download = soup.find('div', class_='downloads')
+        link = download.find('a')['href']
 
-
-    html_cerberus=browser.html
-    soup = BeautifulSoup(html_cerberus, 'html.parser')
-    download_cerbrus = soup.find('div', class_='downloads')
-
-    link_cerberus = download_cerbrus.find('a')['href']
-
-	# Picture - Schiaparelli Hemisphere Enhanced -------------
-
-	# Retrieve page
-    browser.visit(url)
-    html = browser.html
-
-	# Wait a couple seconds in case result is not coming back fast enough
-
-	# Create BeautifulSoup object; parse with 'html.parser'
-    soup = BeautifulSoup(html, 'html.parser')
-
-	# Click on the link and go to the next page to get the image link
-    browser.click_link_by_partial_text('Schiaparelli Hemisphere Enhanced')
-
-
-    html_schiaparelli=browser.html
-    soup = BeautifulSoup(html_schiaparelli, 'html.parser')
-    download_schiaparelli = soup.find('div', class_='downloads')
-
-    link_schiaparelli = download_schiaparelli.find('a')['href']
-
-	# Picture - Syrtis Major Hemisphere Enhanced -------------
-
-	# Retrieve page
-    browser.visit(url)
-    html = browser.html
-
-	# Wait a couple seconds in case result is not coming back fast enough
-
-	# Create BeautifulSoup object; parse with 'html.parser'
-    soup = BeautifulSoup(html, 'html.parser')
-
-	# Click on the link and go to the next page to get the image link
-    browser.click_link_by_partial_text('Syrtis Major Hemisphere Enhanced')
-
-    html_syrtis=browser.html
-    soup = BeautifulSoup(html_syrtis, 'html.parser')
-    download_syrtis = soup.find('div', class_='downloads')
-
-    link_syrtis = download_syrtis.find('a')['href']
-	
-	# Picture - Valles Marineris Hemisphere Enhanced -------------
-
-	# Retrieve page
-    browser.visit(url)
-    html = browser.html
-
-	# Wait a couple seconds in case result is not coming back fast enough
-
-	# Create BeautifulSoup object; parse with 'html.parser'
-    soup = BeautifulSoup(html, 'html.parser')
-  
-	# Click on the link and go to the next page to get the image link
-    browser.click_link_by_partial_text('Valles Marineris Hemisphere Enhanced')
-
-
-    html_valles=browser.html
-    soup = BeautifulSoup(html_valles, 'html.parser')
-    download_valles = soup.find('div', class_='downloads')
-
-    link_valles = download_valles.find('a')['href']
-
-    hemisphere_img = [link_cerberus, link_schiaparelli, link_syrtis, link_valles]
+        # Compose result list
+        hemisphere_img.append(link)
 
     #-------------- Compose the result dictionary -----------------------------#
     mars = {'news': latest_news,
             'img_url': featured_image_url,
             'weather': mars_weather,
             'facts': html_table,
-			'hemisphere': hemisphere_img}
-    
+            'caption': hemi_text,
+	    'hemisphere': hemisphere_img}
+
     return mars

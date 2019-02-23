@@ -5,34 +5,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hot Finds</title>
+  <title>Mission to Mars</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
   <div class="container">
 
+    <!-- Headline -->
     <div class="jumbotron text-center">
-      <h1>Facts of Mars</h1>
-      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Find An Awesome facts!</a></p>
+      <h1>Mission to Mars</h1>
+      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape New Data</a></p>
     </div>
 
-    <!-- Craigslist Listings -->
-    <div class="row" id="craiglist-listings">
+    <!-- Latest News headline -->
+    <div class="row">
       <div class="col-md-12">
-        <h4 class="heading">{{mars_info.news[0]}} {{mars_info.news[1]}}</h4> 
-        <img src='{{mars_info.img_url}}'/>
-        <h4>{{mars_info.weather}}</h4>
-        {{mars_info.facts|safe}}
-
-        <img src='{{mars_info.hemisphere[0]}}'/>
-        <img src='{{mars_info.hemisphere[1]}}'/>
-        <img src='{{mars_info.hemisphere[2]}}'/>
-        <img src='{{mars_info.hemisphere[3]}}'/>
+        <h2>Latest Mars News</h3>
       </div>
     </div>
 
-  </div>
+    <!-- Latest News -->
+    <div class="row">
+        <div class="col-md-12">
+          <h4><strong>{{mars_info.news[0]}}</strong></h4> 
+          <h5>{{mars_info.news[1]}}</h5>
+        </div>
+      </div>
+  
+    <!-- Featured Image headline -->
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Featured Mars Image</h3>
+      </div>
+    </div>
+  
+    <!-- Featured image, weather and facts table -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-7">
+        <img src='{{mars_info.img_url}}' style='width:95%; height: auto;' alt='Mars Featured Image'/>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-4">
+        <div class="row div-border">
+          <div class="col-md-12" style='outline: 1px solid gainsboro;'>
+            <h3>Current Weather on Mars</h3>
+            <h5>{{mars_info.weather}}</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Mars Facts</h3>
+            {{mars_info.facts|safe}}
+          </div>
+        </div>
+      </div>
+    </div>
+        
+    <!-- Mars Hemispheres Headline -->    
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class='text-center'>Mars Hemispheres</h2>
+      </div>
+    </div>
+
+    <!-- Mar Hemispheres -->
+    <div class="row">
+      {% for x in range(4) %}
+        <div class="col-xs-12 col-sm-6 col-md-6" style='outline: 1px solid gainsboro; margin-bottom: 15px'>
+          <div class="row">
+            <div class="col-md-12">
+              <img src='{{mars_info.hemisphere[x]}}' style='width:95%; height: auto;' alt='{{mars_info.caption[x]}}'/>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-12">
+              <h4>{{mars_info.caption[x]}}</h4>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div> <!-- Container -->
 </body>
 
 </html>
