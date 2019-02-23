@@ -59,12 +59,11 @@ def scrape():
     # Loop through tweets search for result
     for tweet in tweets:
 
-        # Find the title of the tweet
+        # Find the title and content of the tweet
         title = tweet.find('span', class_='FullNameGroup')
+        mars_weather = tweet.find('div', class_='js-tweet-text-container').p.text.strip()
     
-        if ("Mars Weather" in title.text.strip()):
-            
-            mars_weather = tweet.find('div', class_='js-tweet-text-container').p.text.strip()
+        if ("InSight" in mars_weather):
             break
 
     #---------- Mars Facts -------------------#
